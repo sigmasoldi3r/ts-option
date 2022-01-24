@@ -16,7 +16,16 @@ you want a null value to be a valid one.
 
 Run `yarn add @octantis/option` or `npm i @octantis/option`
 
+## API
+
+Option is iterable, in case that the value is present yields
+the value.
+
+The option value is meant to mimic Scala's `option[A]` type.
+
 ## Example usage
+
+Simplest example:
 
 ```ts
 // Assume a function
@@ -34,11 +43,10 @@ console.log(`n = ${n.get()}`)
 // This throws if the value wasn't present.
 ```
 
-<!-- ## API
-
-The option value is meant to mimic Scala's `option[A]` type,
-so you have the following methods:
+With iteration:
 
 ```ts
-
-``` -->
+for (const value of maybe()) {
+  console.log(`value = ${value}`)
+}
+```

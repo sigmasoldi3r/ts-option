@@ -54,7 +54,7 @@ abstract class Option<A> {
   /**
    * Evaluate and return alternate optional value if empty
    */
-  orElse(alternative: option<A>): Option<A> {
+  orElse(alternative: option<A>): option<A> {
     if (this.isEmpty()) {
       return alternative
     }
@@ -74,26 +74,42 @@ abstract class Option<A> {
   /**
    * Apply function on optional value, return default if empty
    */
-  fold() {}
+  fold<B>(fallback: B, folder: (value: A) => B): B {
+    if (this.isDefined()) {
+      return folder(this.value)
+    }
+    return fallback
+  }
 
   /**
    * Apply a function on the optional value
    */
-  map<B>(map: (value: A) => B): Option<B> {
+  map<B>(map: (value: A) => B): option<B> {
     if (this.isDefined()) {
       return some(map(this.value))
     }
+    return none()
   }
 
   /**
    * Same as map but function must return an optional value
    */
-  flatMap() {}
+  flatMap<B>(map: (value: A) => option<B>): option<B> {
+    if (this.isDefined()) {
+      return map(this.value)
+    }
+    return none()
+  }
 
   /**
    * Apply a procedure on option value
    */
-  foreach() {}
+  foreach(consumer: (value: A) => void): void {
+    if (this.isDefined()) {
+      consumer(this.value)
+    }
+  }
+
   /**
    * Apply partial pattern match on optional value
    */
@@ -134,6 +150,12 @@ abstract class Option<A> {
    * Unary list of optional value, otherwise the empty list
    */
   toList() {}
+
+  *[Symbol.iterator]() {
+    if (this.isDefined()) {
+      yield this.value
+    }
+  }
 }
 
 export class NoValueError extends Error {}

@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { None, none, NoValueError, option, Some, some } from '.'
+import { None, none, option, Some, some } from '.'
 
 const TEST_SAMPLE_VALUE = 10
 
@@ -41,4 +41,12 @@ describe('Basic non-defined-value behaviour', () => {
   })
 })
 
-// describe('A', () => {})
+describe('Iterator-like API', () => {
+  it('Should iterate once the option value', () => {
+    let i = 0
+    for (const value of withValue()) {
+      i += value
+    }
+    expect(i).to.be.eq(TEST_SAMPLE_VALUE)
+  })
+})
