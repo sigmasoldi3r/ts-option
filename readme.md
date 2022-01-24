@@ -12,6 +12,10 @@ As a side effect, makes an optional value capable of holding
 a null value, because you might encounter situations where
 you want a null value to be a valid one.
 
+## Installation
+
+Run `yarn add @octantis/option` or `npm i @octantis/option`
+
 ## Example usage
 
 ```ts
