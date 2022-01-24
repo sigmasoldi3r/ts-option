@@ -1,4 +1,7 @@
-# Option
+# Option ![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+
+![License](https://img.shields.io/github/license/sigmasoldi3r/ts-option.svg)
+
 
 Optional values are meant to describe a value that is
 _explicitly_ present or not.
