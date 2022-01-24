@@ -1,3 +1,6 @@
 # Ignore logs and dependencies
 /node_modules/
 /*.log
+
+# Ignore output artifacts
+/dist/

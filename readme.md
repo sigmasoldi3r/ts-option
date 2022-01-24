@@ -23,6 +23,81 @@ the value.
 
 The option value is meant to mimic Scala's `option[A]` type.
 
+```ts
+/**
+ * True if not empty
+ */
+isDefined(): this is Some<A>;
+/**
+ * Return value, throw exception if empty
+ */
+get(): A;
+/**
+ * True if empty
+ */
+isEmpty(): this is None<A>;
+/**
+ * True if not empty
+ */
+nonEmpty(): this is Some<A>;
+/**
+ * Evaluate and return alternate optional value if empty
+ */
+orElse(alternative: option<A>): option<A>;
+/**
+ * Evaluate and return alternate value if empty
+ */
+getOrElse(alternative: A): A;
+/**
+ * Apply function on optional value, return default if empty
+ */
+fold<B>(fallback: B, folder: (value: A) => B): B;
+/**
+ * Apply a function on the optional value
+ */
+map<B>(map: (value: A) => B): option<B>;
+/**
+ * Same as map but function must return an optional value
+ */
+flatMap<B>(map: (value: A) => option<B>): option<B>;
+/**
+ * Apply a procedure on option value
+ */
+foreach(consumer: (value: A) => void): void;
+/**
+ * Apply partial pattern match on optional value
+ */
+collect<B>(collector: (value: A) => B | undefined): option<B>;
+/**
+ * An optional value satisfies predicate
+ */
+filter(filter: (value: A) => boolean): option<A>;
+/**
+ * An optional value doesn't satisfy predicate
+ */
+filterNot(filter: (value: A) => boolean): option<A>;
+/**
+ * Apply predicate on optional value, or false if empty
+ */
+exists(predicate: (value: A) => boolean): boolean;
+/**
+ * Apply predicate on optional value, or true if empty
+ */
+forall(predicate: (value: A) => boolean): boolean;
+/**
+ * Checks if value equals optional value, or false if empty
+ */
+contains<B extends A>(element: B): boolean;
+/**
+ * Combine two optional values to make a paired optional value
+ */
+zip<B>(that: option<B>): option<[A, B]>;
+/**
+ * Unary list of optional value, otherwise the empty list
+ */
+toList(): A[];
+```
+
 ## Example usage
 
 Simplest example:

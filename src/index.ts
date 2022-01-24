@@ -113,43 +113,93 @@ abstract class Option<A> {
   /**
    * Apply partial pattern match on optional value
    */
-  collect() {}
+  collect<B>(collector: (value: A) => B | undefined): option<B> {
+    if (this.isDefined()) {
+      const result = collector(this.value)
+      if (typeof result !== 'undefined') {
+        return some(result)
+      }
+    }
+    return none()
+  }
+
   /**
    * An optional value satisfies predicate
    */
-  filter() {}
+  filter(filter: (value: A) => boolean): option<A> {
+    if (this.isDefined() && filter(this.value)) {
+      return this
+    }
+    return none()
+  }
+
   /**
    * An optional value doesn't satisfy predicate
    */
-  filterNot() {}
+  filterNot(filter: (value: A) => boolean): option<A> {
+    if (this.isDefined() && !filter(this.value)) {
+      return this
+    }
+    return none()
+  }
+
   /**
    * Apply predicate on optional value, or false if empty
    */
-  exists() {}
+  exists(predicate: (value: A) => boolean): boolean {
+    if (this.isDefined()) {
+      return predicate(this.value)
+    }
+    return false
+  }
+
   /**
    * Apply predicate on optional value, or true if empty
    */
-  forall() {}
+  forall(predicate: (value: A) => boolean) {
+    if (this.isDefined()) {
+      return predicate(this.value)
+    }
+    return true
+  }
+
   /**
    * Checks if value equals optional value, or false if empty
    */
-  contains() {}
+  contains<B extends A>(element: B): boolean {
+    if (this.isDefined()) {
+      return this.value === element
+    }
+    return false
+  }
+
   /**
    * Combine two optional values to make a paired optional value
    */
-  zip() {}
-  /**
-   * Split an optional pair to two optional values
-   */
-  unzip() {}
-  /**
-   * Split an optional triple to three optional values
-   */
-  unzip3() {}
+  zip<B>(that: option<B>): option<[A, B]> {
+    if (this.isDefined() && that.isDefined()) {
+      return some([this.value, that.value])
+    }
+    return none()
+  }
+
+  // /**
+  //  * Split an optional pair to two optional values
+  //  */
+  // unzip() {
+  // }
+
+  // /**
+  //  * Split an optional triple to three optional values
+  //  */
+  // unzip3() {}
+
   /**
    * Unary list of optional value, otherwise the empty list
    */
-  toList() {}
+  toList(): A[] {
+    return [...this]
+  }
 
   *[Symbol.iterator]() {
     if (this.isDefined()) {
