@@ -26,7 +26,7 @@
  */
 export type option<A> = Some<A> | None<A>
 
-abstract class Option<A> {
+abstract class Option<A> implements Iterable<A> {
   /**
    * True if not empty
    */
@@ -104,7 +104,7 @@ abstract class Option<A> {
   /**
    * Apply a procedure on option value
    */
-  foreach(consumer: (value: A) => void): void {
+  forEach(consumer: (value: A) => void): void {
     if (this.isDefined()) {
       consumer(this.value)
     }
@@ -113,6 +113,9 @@ abstract class Option<A> {
   /**
    * Apply partial pattern match on optional value
    */
+  collect<B>(collector: (value: A) => undefined): option<A>
+  collect<B>(collector: (value: A) => any): option<A>
+  collect<B>(collector: (value: A) => B): option<B>
   collect<B>(collector: (value: A) => B | undefined): option<B> {
     if (this.isDefined()) {
       const result = collector(this.value)
@@ -156,7 +159,7 @@ abstract class Option<A> {
   /**
    * Apply predicate on optional value, or true if empty
    */
-  forall(predicate: (value: A) => boolean) {
+  forAll(predicate: (value: A) => boolean): boolean {
     if (this.isDefined()) {
       return predicate(this.value)
     }

@@ -1,0 +1,9 @@
+# Ignore dependencies and logs
+/node_modules/
+*.log
+
+# Ignore sources and docs
+readme.md
+tsconfig.json
+/src/
+

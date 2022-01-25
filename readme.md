@@ -2,7 +2,6 @@
 
 ![License](https://img.shields.io/github/license/sigmasoldi3r/ts-option.svg)
 
-
 Optional values are meant to describe a value that is
 _explicitly_ present or not.
 
@@ -66,7 +65,7 @@ flatMap<B>(map: (value: A) => option<B>): option<B>;
 /**
  * Apply a procedure on option value
  */
-foreach(consumer: (value: A) => void): void;
+forEach(consumer: (value: A) => void): void;
 /**
  * Apply partial pattern match on optional value
  */
@@ -86,7 +85,7 @@ exists(predicate: (value: A) => boolean): boolean;
 /**
  * Apply predicate on optional value, or true if empty
  */
-forall(predicate: (value: A) => boolean): boolean;
+forAll(predicate: (value: A) => boolean): boolean;
 /**
  * Checks if value equals optional value, or false if empty
  */
