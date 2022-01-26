@@ -4,7 +4,9 @@
     "outDir": "dist",
     "sourceMap": true,
     "declaration": true,
-    "target": "ES6"
+    "target": "ES6",
+    "module": "CommonJS",
+    "moduleResolution": "Node"
   },
   "files": ["src/index.ts"]
 }
