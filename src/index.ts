@@ -186,16 +186,31 @@ abstract class Option<A> implements Iterable<A> {
     return none()
   }
 
-  // /**
-  //  * Split an optional pair to two optional values
-  //  */
-  // unzip() {
-  // }
+  /**
+   * Split an optional pair to two optional values
+   */
+  unzip(): A extends [any, any] ? [option<A[0]>, option<A[1]>] : never {
+    if (this.isDefined()) {
+      return [some(this.value[0]), some(this.value[1])] as any
+    }
+    return [none(), none()] as any
+  }
 
-  // /**
-  //  * Split an optional triple to three optional values
-  //  */
-  // unzip3() {}
+  /**
+   * Split an optional triple to three optional values
+   */
+  unzip3(): A extends [any, any, any]
+    ? [option<A[0]>, option<A[1]>, option<A[2]>]
+    : never {
+    if (this.isDefined()) {
+      return [
+        some(this.value[0]),
+        some(this.value[1]),
+        some(this.value[2]),
+      ] as any
+    }
+    return [none(), none(), none()] as any
+  }
 
   /**
    * Unary list of optional value, otherwise the empty list

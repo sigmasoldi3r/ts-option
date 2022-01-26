@@ -41,6 +41,21 @@ describe('Basic non-defined-value behaviour', () => {
   })
 })
 
+describe('Type safe discrimination', () => {
+  it('Should be a valid "some" type', () => {
+    const hasData = withValue()
+    if (hasData.isDefined()) {
+      expect(hasData.value).to.exist
+    }
+  })
+  it('Should be a valid "none" type', () => {
+    const noData = withoutValue()
+    if (noData.isEmpty()) {
+      expect(noData).to.be.instanceOf(None)
+    }
+  })
+})
+
 describe('Safe optional access', () => {
   it('Should map to an alternative optional, if missing', () => {
     const a = withValue().orElse(some(-1))
@@ -154,5 +169,57 @@ describe('Iterator-like API', () => {
     expect(withValue().contains(0)).to.be.false
     expect(withoutValue().contains(TEST_SAMPLE_VALUE)).to.be.false
     expect(withoutValue().contains(0)).to.be.false
+  })
+})
+
+describe('Tuple operations', () => {
+  it('Should join a tuple of optionals in to an optional tuple', () => {
+    const left = withValue()
+    const right = withValue().map((n) => n + 1)
+    const tuple = left.zip(right)
+    expect(tuple.isDefined()).to.be.true
+    const tupleData = tuple.get()
+    expect(tupleData).to.be.instanceOf(Array)
+    expect(tupleData.length).to.be.eq(2)
+    expect(tupleData[0]).to.be.eq(TEST_SAMPLE_VALUE)
+    expect(tupleData[1]).to.be.eq(TEST_SAMPLE_VALUE + 1)
+  })
+  it('Should unzip a 2-tuple into a pair of options', () => {
+    const tuple2: option<[number, number]> = some([1, 2])
+    const [left, right] = tuple2.unzip()
+    expect(left.isDefined()).to.be.true
+    expect(right.isDefined()).to.be.true
+    expect(left.get()).to.be.eq(1)
+    expect(right.get()).to.be.eq(2)
+  })
+  it('Should not unzip a 2-tuple into a pair of options', () => {
+    const tuple2: option<[number, number]> = none()
+    const [left, right] = tuple2.unzip()
+    expect(left.isDefined()).to.be.false
+    expect(right.isDefined()).to.be.false
+  })
+  it('Should unzip a 3-tuple into a pair of options', () => {
+    const tuple3: option<[number, number, number]> = some([1, 2, 3])
+    const [left, center, right] = tuple3.unzip3()
+    expect(left.isDefined()).to.be.true
+    expect(center.isDefined()).to.be.true
+    expect(right.isDefined()).to.be.true
+    expect(left.get()).to.be.eq(1)
+    expect(center.get()).to.be.eq(2)
+    expect(right.get()).to.be.eq(3)
+  })
+  it('Should not unzip a 3-tuple into a pair of options', () => {
+    const tuple3: option<[number, number, number]> = none()
+    const [left, center, right] = tuple3.unzip3()
+    expect(left.isDefined()).to.be.false
+    expect(center.isDefined()).to.be.false
+    expect(right.isDefined()).to.be.false
+  })
+  it('Should not return a meaningful type in case of non tuple types', () => {
+    // This test will always pass at runtime
+    const withValueTuple2: never = withValue().unzip()
+    const withValueTuple3: never = withValue().unzip3()
+    const withoutValueTuple2: never = withoutValue().unzip()
+    const withoutValueTuple3: never = withoutValue().unzip3()
   })
 })
