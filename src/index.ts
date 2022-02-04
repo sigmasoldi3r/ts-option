@@ -258,13 +258,13 @@ export class None<A> extends Option<A> {
 /**
  * Creates a defined value.
  */
-export function some<A>(value: A) {
+export function some<A>(value: A): option<A> {
   return new Some(value)
 }
 
 /**
  * Creates an empty value.
  */
-export function none<A = unknown>() {
+export function none<A = unknown>(): option<A> {
   return new None<A>()
 }
