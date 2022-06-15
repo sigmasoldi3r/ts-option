@@ -1,15 +1,21 @@
 import { expect } from "chai";
-import { None, none, option, Some, some } from ".";
+import { None, Option, Some } from ".";
 import { NoValueError } from "./None";
 
 const TEST_SAMPLE_VALUE = 10;
 
-function withValue(): option<number> {
-  return some(TEST_SAMPLE_VALUE);
+function withValue(): Option<number> {
+  return Some(TEST_SAMPLE_VALUE);
 }
 
-function withoutValue(): option<number> {
-  return none();
+function withoutValue(): Option<number> {
+  return None();
+}
+
+class CustomError extends Error {
+  constructor() {
+    super("my custom error");
+  }
 }
 
 describe("Basic defined-value behaviour", () => {
@@ -24,6 +30,9 @@ describe("Basic defined-value behaviour", () => {
   });
   it("Should unwrap the contained value", () => {
     expect(result.get()).to.be.eq(TEST_SAMPLE_VALUE);
+  });
+  it("Should unwrap the contained value", () => {
+    expect(result.getOrThrow(new CustomError())).to.be.eq(TEST_SAMPLE_VALUE);
   });
 });
 
@@ -40,16 +49,21 @@ describe("Basic non-defined-value behaviour", () => {
   it("Should not unwrap the value, throw error instead", () => {
     expect(() => result.get()).to.throw(NoValueError.DEFAULT_MESSAGE);
   });
+  it("Should not unwrap the value, throw a custom error instead", () => {
+    expect(() => result.getOrThrow(new CustomError())).to.throw(
+      "my custom error"
+    );
+  });
 });
 
 describe("Type safe discrimination", () => {
-  it('Should be a valid "some" type', () => {
+  it('Should be a valid "Some" type', () => {
     const hasData = withValue();
     if (hasData.isDefined()) {
       expect(hasData.value).to.exist;
     }
   });
-  it('Should be a valid "none" type', () => {
+  it('Should be a valid "None" type', () => {
     const noData = withoutValue();
     if (noData.isEmpty()) {
       expect(noData).to.be.instanceOf(None);
@@ -59,8 +73,8 @@ describe("Type safe discrimination", () => {
 
 describe("Safe optional access", () => {
   it("Should map to an alternative optional, if missing", () => {
-    const a = withValue().orElse(some(-1));
-    const b = withoutValue().orElse(some(-1));
+    const a = withValue().orElse(Some(-1));
+    const b = withoutValue().orElse(Some(-1));
     expect(a.get()).to.be.eq(TEST_SAMPLE_VALUE);
     expect(b.get()).to.be.eq(-1);
   });
@@ -71,14 +85,14 @@ describe("Safe optional access", () => {
 });
 
 describe("Iterator-like API", () => {
-  it("Should iterate once the option value", () => {
+  it("Should iterate once the Option value", () => {
     let i = 0;
     for (const value of withValue()) {
       i += value;
     }
     expect(i).to.be.eq(TEST_SAMPLE_VALUE);
   });
-  it("Shouldn't iterate at all if the option is none", () => {
+  it("Shouldn't iterate at all if the Option is None", () => {
     let i = 0;
     for (const value of withoutValue()) {
       i += value;
@@ -101,8 +115,8 @@ describe("Iterator-like API", () => {
     expect(b).to.be.eq(fallback);
   });
   it("Should flat-map values from optionals", () => {
-    const a = withValue().flatMap((_) => some("hello"));
-    const b = withoutValue().flatMap((_) => some("hello"));
+    const a = withValue().flatMap((_) => Some("hello"));
+    const b = withoutValue().flatMap((_) => Some("hello"));
     expect(a.get()).to.be.eq("hello");
     expect(b.isDefined()).to.be.false;
   });
@@ -186,7 +200,7 @@ describe("Tuple operations", () => {
     expect(tupleData[1]).to.be.eq(TEST_SAMPLE_VALUE + 1);
   });
   it("Should unzip a 2-tuple into a pair of options", () => {
-    const tuple2: option<[number, number]> = some([1, 2]);
+    const tuple2: Option<[number, number]> = Some([1, 2]);
     const [left, right] = tuple2.unzip();
     expect(left.isDefined()).to.be.true;
     expect(right.isDefined()).to.be.true;
@@ -194,13 +208,13 @@ describe("Tuple operations", () => {
     expect(right.get()).to.be.eq(2);
   });
   it("Should not unzip a 2-tuple into a pair of options", () => {
-    const tuple2: option<[number, number]> = none();
+    const tuple2: Option<[number, number]> = None();
     const [left, right] = tuple2.unzip();
     expect(left.isDefined()).to.be.false;
     expect(right.isDefined()).to.be.false;
   });
   it("Should unzip a 3-tuple into a pair of options", () => {
-    const tuple3: option<[number, number, number]> = some([1, 2, 3]);
+    const tuple3: Option<[number, number, number]> = Some([1, 2, 3]);
     const [left, center, right] = tuple3.unzip3();
     expect(left.isDefined()).to.be.true;
     expect(center.isDefined()).to.be.true;
@@ -210,7 +224,7 @@ describe("Tuple operations", () => {
     expect(right.get()).to.be.eq(3);
   });
   it("Should not unzip a 3-tuple into a pair of options", () => {
-    const tuple3: option<[number, number, number]> = none();
+    const tuple3: Option<[number, number, number]> = None();
     const [left, center, right] = tuple3.unzip3();
     expect(left.isDefined()).to.be.false;
     expect(center.isDefined()).to.be.false;

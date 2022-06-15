@@ -24,6 +24,9 @@ Some.prototype.isDefined = function () {
 Some.prototype.get = function () {
   return this.value;
 };
+Some.prototype.getOrThrow = function (willThrow: unknown) {
+  return this.value;
+};
 Some.prototype.isEmpty = function () {
   return false;
 };

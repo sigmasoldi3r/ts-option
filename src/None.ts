@@ -28,6 +28,9 @@ None.prototype.isDefined = function () {
 None.prototype.get = function () {
   throw new NoValueError();
 };
+None.prototype.getOrThrow = function (willThrow: unknown) {
+  throw willThrow;
+};
 None.prototype.isEmpty = function () {
   return true;
 };
