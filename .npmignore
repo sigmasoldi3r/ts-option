@@ -5,5 +5,4 @@
 # Ignore sources and docs
 readme.md
 tsconfig.json
-/src/
 
