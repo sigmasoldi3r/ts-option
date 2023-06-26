@@ -4,3 +4,4 @@
 
 # Ignore output artifacts
 /dist/
+/docs/

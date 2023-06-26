@@ -6,7 +6,8 @@
     "declaration": true,
     "target": "ES6",
     "module": "CommonJS",
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "lib": ["ES2015"]
   },
   "files": ["src/index.ts"]
 }
