@@ -31,6 +31,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Install dependencies
+        run: yarn
       - name: Build the pages
         run: yarn docgen
       # maybe not needed:
